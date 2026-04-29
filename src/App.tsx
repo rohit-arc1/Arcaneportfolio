@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'motion/react';
-import { Play, ArrowRight, MessageSquare, MonitorPlay, Smartphone, Gamepad2, Video, Film, Sparkles, ChevronRight, ChevronLeft, Star, Camera, Film as FilmIcon } from 'lucide-react';
+import { Play, ArrowRight, MessageSquare, MonitorPlay, Smartphone, Gamepad2, Video, Film, Sparkles, ChevronRight, ChevronLeft, Star, Camera, Film as FilmIcon, Layers, Clock, Zap, Settings } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { ThreeScene } from './components/ThreeScene';
 
 const CustomCursor = () => {
@@ -190,6 +191,71 @@ const VideoEmbed = ({ videoId, title, isShort = false, className = "", autoLoad 
   );
 };
 
+const ChannelGrowthGraph = () => {
+  const data = [
+    { month: 'Month 1', subs: 30000 },
+    { month: 'Month 2', subs: 32500 },
+    { month: 'Month 3', subs: 38000 },
+    { month: 'Month 4', subs: 45000 },
+    { month: 'Month 5', subs: 42000 },
+    { month: 'Month 6', subs: 55000 },
+    { month: 'Month 7', subs: 68000 },
+    { month: 'Month 8', subs: 75000 },
+    { month: 'Month 9', subs: 82000 },
+    { month: 'Month 10', subs: 91000 },
+    { month: 'Month 11', subs: 96000 },
+    { month: 'Month 12', subs: 100000 },
+  ];
+
+  return (
+    <div className="w-full h-full min-h-[240px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <defs>
+            <linearGradient id="colorGrowth" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <XAxis 
+            dataKey="month" 
+            hide 
+          />
+          <YAxis 
+            domain={[20000, 110000]} 
+            hide 
+          />
+          <Tooltip 
+            content={({ active, payload }) => {
+              if (active && payload && payload.length) {
+                return (
+                  <div className="bg-black/95 border border-white/10 backdrop-blur-xl p-4 rounded-2xl shadow-2xl">
+                    <div className="flex items-center gap-2">
+                       <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                       <p className="text-blue-400 font-bold text-xl">{(payload[0].value as number).toLocaleString()} <span className="text-[10px] text-white/30 font-normal uppercase tracking-tighter">Subscribers</span></p>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            }}
+            cursor={{ stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '5 5' }}
+          />
+          <Area 
+            type="monotone" 
+            dataKey="subs" 
+            stroke="#3b82f6" 
+            strokeWidth={4}
+            fillOpacity={1} 
+            fill="url(#colorGrowth)" 
+            animationDuration={2500}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
 const FeaturedWork = () => {
   const marqueeVideos = [
     { id: "5rdkg-j7O6A", title: "Unlocking the GOD PICKAXE in Roblox The Forge.." },
@@ -250,24 +316,10 @@ const FeaturedWork = () => {
           </div>
           <motion.div 
             whileHover={{ y: -5 }}
-            className="order-1 md:order-2 aspect-video bg-[#050505] rounded-2xl border border-white/10 p-6 relative overflow-hidden"
+            className="order-1 md:order-2 aspect-video bg-[#050505] rounded-3xl border border-white/10 p-4 relative overflow-hidden flex items-center justify-center shadow-2xl"
           >
-            {/* Abstract Graph Representation */}
-            <svg viewBox="0 0 400 200" className="w-full h-full overflow-visible">
-              <defs>
-                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="rgba(139,92,246,0.2)" />
-                  <stop offset="100%" stopColor="rgba(139,92,246,1)" />
-                </linearGradient>
-                <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(139,92,246,0.3)" />
-                  <stop offset="100%" stopColor="rgba(139,92,246,0)" />
-                </linearGradient>
-              </defs>
-              <path d="M0,180 C50,180 80,150 120,160 C180,175 220,50 280,60 C320,65 360,30 400,20 L400,200 L0,200 Z" fill="url(#fillGrad)" />
-              <path d="M0,180 C50,180 80,150 120,160 C180,175 220,50 280,60 C320,65 360,30 400,20" fill="none" stroke="url(#lineGrad)" strokeWidth="4" strokeLinecap="round" />
-              <circle cx="400" cy="20" r="6" fill="#fff" className="animate-pulse" />
-            </svg>
+            <div className="absolute inset-0 bg-blue-500/5 blur-[100px] pointer-events-none" />
+            <ChannelGrowthGraph />
           </motion.div>
         </div>
 
@@ -280,10 +332,11 @@ const FeaturedWork = () => {
           </div>
         </div>
 
-        {/* Subsection 3.5: Raw to Engaging */}
+        {/* Subsection 3.5: Scaling & Results */}
         <div className="mb-32">
           <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 font-display">From raw footage → engaging, high-retention content 🚀</h3>
+            <h3 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 font-display text-gradient">Viral Growth Strategy & Scaling 📈</h3>
+            <p className="text-white/40 italic font-accent">Real metrics from channels scaled to 100K+ subscribers.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <VideoEmbed videoId="vfYzjkUMXsw" title="Raw to Engaging 1" isShort={true} autoLoad={true} />
@@ -334,6 +387,11 @@ const FeaturedWork = () => {
 const Services = () => {
   const services = [
     {
+      icon: <Layers className="w-8 h-8" />,
+      title: "Channel Management",
+      desc: "A complete system for editing, uploading, and scaling your channel."
+    },
+    {
       icon: <FilmIcon className="w-8 h-8" />,
       title: "YouTube Editing",
       desc: "Narrative-driven edits that prioritize retention and storytelling excellence."
@@ -347,11 +405,6 @@ const Services = () => {
       icon: <MonitorPlay className="w-8 h-8" />,
       title: "Commercial Ads",
       desc: "Cinematic promotional content designed to convert and leave a lasting impression."
-    },
-    {
-      icon: <Gamepad2 className="w-8 h-8" />,
-      title: "Gaming Features",
-      desc: "Dynamic gaming storytelling with advanced sound design and visual flair."
     }
   ];
 
@@ -359,7 +412,7 @@ const Services = () => {
     <section id="services" className="py-32 relative overflow-hidden bg-white/[0.01]">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="mb-24 text-center">
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 font-display">Specialized Creative Agency Services</h2>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 font-display">Specialized Creative Services</h2>
           <p className="text-white/40 text-xl max-w-2xl mx-auto italic font-accent">Elevating raw footage into premium visual narratives.</p>
         </div>
 
@@ -378,6 +431,53 @@ const Services = () => {
               </div>
               <h3 className="text-2xl font-bold mb-4 font-display">{service.title}</h3>
               <p className="text-white/40 leading-relaxed font-accent italic">{service.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Highlights = () => {
+  const highlights = [
+    {
+      icon: <Clock className="w-6 h-6" />,
+      title: "Fast Delivery Available",
+      desc: "Turnaround in 24 hours for urgent projects without quality loss."
+    },
+    {
+      icon: <Zap className="w-6 h-6" />,
+      title: "Retention Boost Edit",
+      desc: "Strategic pacing and visual hooks designed for viral performance."
+    },
+    {
+      icon: <Settings className="w-6 h-6" />,
+      title: "Custom Plan Available",
+      desc: "Tailored editing workflows built specifically for your brand's unique needs."
+    }
+  ];
+
+  return (
+    <section className="py-20 relative border-y border-white/5 bg-black">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid md:grid-cols-3 gap-12">
+          {highlights.map((item, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.2 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-6"
+            >
+              <div className="flex-shrink-0 w-12 h-12 rounded-full border border-accent/30 bg-accent/5 flex items-center justify-center text-accent">
+                {item.icon}
+              </div>
+              <div className="text-left">
+                <h4 className="text-lg font-bold font-display uppercase tracking-wider mb-1">{item.title}</h4>
+                <p className="text-white/40 text-sm italic font-accent">{item.desc}</p>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -495,7 +595,7 @@ const Contact = () => {
       </div>
       
       <div className="mt-40 border-t border-white/5 py-10 text-center">
-         <p className="text-white/20 text-xs font-mono tracking-widest uppercase">© 2026 Arcane Creative Agency • All Rights Reserved</p>
+         <p className="text-white/20 text-xs font-mono tracking-widest uppercase">© 2026 Arcane • All Rights Reserved</p>
       </div>
     </footer>
   );
@@ -511,6 +611,7 @@ export default function App() {
         <Hero />
         <FeaturedWork />
         <Services />
+        <Highlights />
         <Testimonials />
         <Contact />
       </main>
