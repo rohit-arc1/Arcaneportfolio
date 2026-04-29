@@ -5,8 +5,18 @@ import { PerspectiveCamera, Stars, SpotLight, Environment, ScrollControls } from
 export const ThreeScene = () => {
   return (
     <div className="fixed inset-0 pointer-events-none z-0">
-      <Canvas dpr={[1, 2]}>
-        <ScrollControls pages={3} damping={0.2}>
+      <Canvas 
+        dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : [1, 2]}
+        gl={{ 
+          antialias: false,
+          stencil: false,
+          powerPreference: "high-performance",
+          alpha: false
+        }}
+        camera={{ position: [0, 0, 12], fov: 40 }}
+        performance={{ min: 0.5 }}
+      >
+        <ScrollControls pages={3} damping={0.1}>
           <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={40} />
           <color attach="background" args={['#000000']} />
           
@@ -21,7 +31,7 @@ export const ThreeScene = () => {
             color="#C9A14A" 
           />
           
-          <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade speed={0} />
+          <Stars radius={100} depth={50} count={window.innerWidth < 768 ? 1000 : 3000} factor={4} saturation={0} fade speed={0} />
           
           <fog attach="fog" args={['#000000', 5, 30]} />
         </ScrollControls>
