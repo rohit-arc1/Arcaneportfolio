@@ -1,3 +1,3 @@
 
 # Deployed my AI site
-I created and deployed my AI site using vercel
+I created my AI site and deployed using vercel
