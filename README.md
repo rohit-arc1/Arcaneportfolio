@@ -1,2 +1,2 @@
 
-# Run and deploy my AI site
+# Run and deployed my AI site
